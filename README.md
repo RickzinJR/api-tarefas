@@ -1,42 +1,102 @@
-# API de tarefas
+# API de Tarefas
 
-API REST em Node.js e Express para gerenciamento de tarefas.
+API REST para gerenciamento de tarefas, construída em Node.js e Express seguindo o padrão MVC.
 
-## Executar localmente
+Projeto desenvolvido durante o curso de Análise e Desenvolvimento de Sistemas na FECAP, com foco em entender na prática como uma API REST funciona: rotas, verbos HTTP, códigos de status e separação de responsabilidades.
 
-1. descompacte a pasta e entre nela:
+## Funcionalidades
 
-cd tarefas-api
+A API expõe um CRUD completo sobre o recurso `tarefas`:
 
-2. instale dependências:
+| Método | Rota | Descrição | Status de sucesso |
+|---|---|---|---|
+| `GET` | `/tarefas` | Lista todas as tarefas | `200 OK` |
+| `POST` | `/tarefas` | Cria uma nova tarefa | `201 Created` |
+| `PUT` | `/tarefas/:id` | Atualiza uma tarefa existente | `200 OK` |
+| `DELETE` | `/tarefas/:id` | Remove uma tarefa | `204 No Content` |
 
-colocar comando no console: npm install
+Quando o `id` informado não existe, a API responde `404 Not Found`.
 
-3. rodar em desenvolvimento:
+## Tecnologias
 
-colocar comando no console: npm run dev
+- **Node.js** — ambiente de execução
+- **Express** — roteamento e tratamento de requisições
+- **Postman** — coleção de testes incluída no repositório
 
-4. rodar:
+## Arquitetura
 
-colocar comando no console: npm start
+O projeto segue o padrão **MVC**, separando responsabilidades em camadas:
 
-O servidor iniciará em `http://localhost:3000`.
+```
+tarefas-api/
+├── src/
+│   ├── routes/         # Define as rotas e os verbos HTTP
+│   ├── controllers/    # Recebe a requisição e devolve a resposta
+│   ├── models/         # Guarda e manipula os dados
+│   ├── app.js          # Configura o Express e os middlewares
+│   └── server.js       # Sobe o servidor
+├── postman_collection.json
+└── package.json
+```
 
-## Exemplos (copiar)
+A rota não sabe como o dado é guardado e o model não sabe que existe HTTP. Essa separação facilita trocar a camada de dados depois, por exemplo substituindo o armazenamento em memória por um banco, sem mexer nos controllers.
 
-GET
+## Como executar
 
-Copiar e colar: http://localhost:3000/tarefas
+Requer Node.js instalado.
 
-POST
+```bash
+git clone https://github.com/RickzinJR/api-tarefas.git
+cd api-tarefas/tarefas-api
+npm install
+npm run dev
+```
 
-Copiar e colar: -X POST http://localhost:3000/tarefas -H "Content-Type: application/json" -d '{ "titulo":"Estudar Node", "concluida": false }'
+O servidor sobe em `http://localhost:3000`.
 
-PUT
+## Exemplos de uso
 
-Copiar e colar: -X PUT http://localhost:3000/tarefas/1 -H "Content-Type: application/json" -d '{ "titulo":"Estudar Node.js", "concluida": true }'
+**Listar tarefas**
 
-DELETE:
+```bash
+curl http://localhost:3000/tarefas
+```
 
-Copiar e colar: -X DELETE http://localhost:3000/tarefas/1
+**Criar uma tarefa**
 
+```bash
+curl -X POST http://localhost:3000/tarefas \
+  -H "Content-Type: application/json" \
+  -d '{ "titulo": "Estudar Node", "concluida": false }'
+```
+
+**Atualizar uma tarefa**
+
+```bash
+curl -X PUT http://localhost:3000/tarefas/1 \
+  -H "Content-Type: application/json" \
+  -d '{ "titulo": "Estudar Node.js", "concluida": true }'
+```
+
+**Remover uma tarefa**
+
+```bash
+curl -X DELETE http://localhost:3000/tarefas/1
+```
+
+### Testando no Postman
+
+O arquivo `postman_collection.json` está na pasta `tarefas-api`. Importe-o no Postman para ter todas as requisições prontas.
+
+## Próximos passos
+
+- [ ] Persistir os dados em banco (MySQL) no lugar do armazenamento em memória
+- [ ] Validar os dados de entrada
+- [ ] Autenticação com JWT
+- [ ] Testes automatizados
+
+## Autor
+
+**Ricardo Oliveira** — Estudante de Análise e Desenvolvimento de Sistemas na FECAP
+
+[LinkedIn](https://linkedin.com/in/ricardoojunior) · [GitHub](https://github.com/RickzinJR)
